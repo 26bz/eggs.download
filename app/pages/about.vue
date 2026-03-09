@@ -31,6 +31,15 @@
           <template #footer>
             <div class="flex gap-2">
               <UButton
+                to="https://github.com/26bz/eggs.download"
+                target="_blank"
+                color="neutral"
+                variant="ghost"
+                icon="i-simple-icons-github"
+              >
+                Source
+              </UButton>
+              <UButton
                 to="https://ko-fi.com/26bz"
                 target="_blank"
                 color="primary"

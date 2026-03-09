@@ -38,6 +38,10 @@ useSeoMeta({
 
       <template #right>
         <div class="flex gap-2">
+          <NuxtLink to="https://github.com/26bz/eggs.download" target="_blank">
+            <UIcon name="i-simple-icons-github" />
+            Source
+          </NuxtLink>
           <NuxtLink to="https://ko-fi.com/26bz" target="_blank">
             <UIcon name="i-lucide-heart" />
             Donate
