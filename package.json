@@ -1,0 +1,38 @@
+{
+  "name": "eggs-download",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "26bz",
+    "email": "26bz@proton.me",
+    "url": "https://26bz.com"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.5.1",
+    "@nuxtjs/mdc": "0.20.2",
+    "@vueuse/core": "^14.2.1",
+    "nuxt": "^4.3.1",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "oxfmt": "^0.36.0",
+    "oxlint": "^0.15.11",
+    "oxlint-tsgolint": "^0.16.0",
+    "typescript": "^5.9.3",
+    "vue-tsc": "^3.2.5"
+  },
+  "packageManager": "pnpm@10.30.3"
+}
