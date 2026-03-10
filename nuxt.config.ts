@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     '#shared/*': resolve(__dirname, 'shared/*'),
     '#shared/types': resolve(__dirname, 'shared/types'),
   },
-  modules: ['@nuxt/ui', '@nuxtjs/mdc'],
+  modules: ['@nuxt/ui', '@nuxtjs/mdc', '@nuxt/scripts'],
 
   devtools: {
     enabled: true,

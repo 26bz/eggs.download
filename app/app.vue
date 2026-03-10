@@ -37,7 +37,7 @@ useSeoMeta({
       </template>
 
       <template #right>
-        <div class="flex gap-2">
+        <UFieldGroup class="gap-4 text-muted text-sm" align="center">
           <NuxtLink to="https://github.com/26bz/eggs.download" target="_blank">
             <UIcon name="i-simple-icons-github" />
             Source
@@ -50,7 +50,7 @@ useSeoMeta({
             <UIcon name="i-lucide-info" />
             About
           </NuxtLink>
-        </div>
+        </UFieldGroup>
       </template>
     </UFooter>
   </UApp>

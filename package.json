@@ -20,11 +20,13 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@nuxt/scripts": "1.0.0-beta.19",
     "@nuxt/ui": "^4.5.1",
     "@nuxtjs/mdc": "0.20.2",
     "@vueuse/core": "^14.2.1",
     "nuxt": "^4.3.1",
-    "tailwindcss": "^4.2.1"
+    "tailwindcss": "^4.2.1",
+    "v-gsap-nuxt": "1.5.12"
   },
   "devDependencies": {
     "@types/node": "^25.3.5",

@@ -1,4 +1,3 @@
-import { createError } from '#imports';
 import type { EggDetail } from '#shared/types/egg';
 
 const memoryCache = new Map<string, { ts: number; payload: EggDetail }>();

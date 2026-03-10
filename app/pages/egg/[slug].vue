@@ -71,6 +71,7 @@
                     :to="`/api/eggs/${slug}`"
                     target="_blank"
                     download
+                    @click="blastConfetti"
                   >
                     Download JSON
                   </UButton>
@@ -96,7 +97,12 @@
               <div class="mt-3 flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
                 <span v-if="egg.exported_at">
                   <span class="font-medium">Exported:</span>
-                  <NuxtTime :datetime="egg.exported_at" year="numeric" month="short" day="numeric" />
+                  <NuxtTime
+                    :datetime="egg.exported_at"
+                    year="numeric"
+                    month="short"
+                    day="numeric"
+                  />
                 </span>
                 <span v-if="egg.author">
                   <span class="font-medium">Author:</span> {{ egg.author }}
@@ -206,6 +212,18 @@ import { useClipboard } from '@vueuse/core';
 import type { AccordionItem, TableColumn } from '@nuxt/ui';
 import type { EggData, EggMeta, EggResponse, EggVariable } from '#shared/types/egg';
 
+interface JSConfettiApi {
+  JSConfetti: {
+    new (): {
+      addConfetti: (options?: { emojis?: string[] }) => void;
+    };
+  };
+}
+
+declare global {
+  interface Window extends JSConfettiApi {}
+}
+
 const route = useRoute();
 const slug = computed(() => route.params.slug as string);
 const proseClasses =
@@ -279,6 +297,35 @@ const accordionItems = computed<AccordionItem[]>(() => {
 
 const toast = useToast();
 const { copy } = useClipboard();
+
+const { onLoaded } = useScriptNpm<JSConfettiApi>({
+  packageName: 'js-confetti',
+  file: 'dist/js-confetti.browser.js',
+  version: '0.12.0',
+  scriptOptions: {
+    use() {
+      if (typeof window === 'undefined' || typeof window.JSConfetti === 'undefined') return;
+      return { JSConfetti: window.JSConfetti };
+    },
+  },
+});
+
+let confettiInstance: JSConfettiApi['JSConfetti']['prototype'] | null = null;
+
+async function getConfetti() {
+  if (confettiInstance) return confettiInstance;
+  return new Promise<JSConfettiApi['JSConfetti']['prototype']>((resolve) => {
+    onLoaded(({ JSConfetti }) => {
+      confettiInstance = new JSConfetti();
+      resolve(confettiInstance);
+    });
+  });
+}
+
+async function blastConfetti() {
+  const confetti = await getConfetti();
+  confetti?.addConfetti({ emojis: ['🥚'], emojiSize: 26 });
+}
 
 async function copyText(text: string | null | undefined, label: string) {
   if (!text) return;
