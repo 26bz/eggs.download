@@ -50,6 +50,7 @@ useSeoMeta({
             <UIcon name="i-lucide-info" />
             About
           </NuxtLink>
+          <UColorModeButton size="xs" color="neutral" variant="ghost" />
         </UFieldGroup>
       </template>
     </UFooter>

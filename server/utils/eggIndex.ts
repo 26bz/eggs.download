@@ -31,7 +31,7 @@ const SOURCES = [
 ] as const;
 
 const CACHE_KEY = 'egg-index:v2';
-const TTL_SECONDS = 60 * 30; // 30 minutes
+const TTL_SECONDS = 60 * 60 * 3; // 3 hours
 
 async function buildIndex(): Promise<EggEntry[]> {
   const repoJobs = SOURCES.flatMap(({ owner, source, repos }) =>
@@ -39,7 +39,7 @@ async function buildIndex(): Promise<EggEntry[]> {
   );
 
   const entries: EggEntry[] = [];
-  const BATCH_SIZE = 2;
+  const BATCH_SIZE = 4;
 
   const processRepo = async ({ owner, source, repo }: (typeof repoJobs)[number]) => {
     const { branch, tree } = await fetchTreeWithBranch(owner, repo);
@@ -55,6 +55,8 @@ async function buildIndex(): Promise<EggEntry[]> {
 
     const repoEntries: EggEntry[] = [];
     const usedSlugs = new Set<string>();
+
+    const indexedAt = Date.now();
 
     for (const file of eggFiles) {
       const parts = file.path.split('/');
@@ -85,6 +87,7 @@ async function buildIndex(): Promise<EggEntry[]> {
         branch,
         path: file.path,
         rawUrl: `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${file.path}`,
+        indexedAt,
       });
     }
 

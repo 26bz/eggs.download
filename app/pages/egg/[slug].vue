@@ -75,15 +75,17 @@
                   >
                     Download JSON
                   </UButton>
-                  <UButton
-                    size="xs"
-                    color="neutral"
-                    variant="subtle"
-                    icon="i-lucide-link"
-                    @click="copyText(meta.rawUrl, 'raw URL')"
-                  >
-                    Copy raw URL
-                  </UButton>
+                  <UDropdownMenu :items="actionItems" :ui="{ content: 'w-64' }">
+                    <UButton
+                      size="xs"
+                      color="neutral"
+                      variant="subtle"
+                      icon="i-lucide-code-2"
+                      trailing-icon="i-lucide-chevron-down"
+                    >
+                      API actions
+                    </UButton>
+                  </UDropdownMenu>
                 </div>
               </div>
 
@@ -191,7 +193,7 @@
                       v-if="formatted"
                       :class="[
                         proseClasses,
-                        '[&_pre]:!max-h-[600px] [&_pre]:!whitespace-pre [&_pre]:!break-normal',
+                        '[&_pre]:max-h-150! [&_pre]:whitespace-pre! [&_pre]:break-normal!',
                       ]"
                     >
                       <MDC :value="`\u0060\u0060\u0060json\n${formatted}\n\u0060\u0060\u0060`" />
@@ -209,7 +211,7 @@
 
 <script setup lang="ts">
 import { useClipboard } from '@vueuse/core';
-import type { AccordionItem, TableColumn } from '@nuxt/ui';
+import type { AccordionItem, DropdownMenuItem, TableColumn } from '@nuxt/ui';
 import type { EggData, EggMeta, EggResponse, EggVariable } from '#shared/types/egg';
 
 interface JSConfettiApi {
@@ -266,6 +268,9 @@ const githubHref = computed(() =>
     : null,
 );
 
+const requestURL = useRequestURL();
+const apiUrl = computed(() => `${requestURL.origin}/api/eggs/${slug.value}`);
+
 const seoTitle = computed(() => {
   const name = egg.value?.name || meta.value?.name || slug;
   return name ? `${name} - eggs.download` : 'Egg - eggs.download';
@@ -298,6 +303,31 @@ const accordionItems = computed<AccordionItem[]>(() => {
 const toast = useToast();
 const { copy } = useClipboard();
 
+const actionItems = computed<DropdownMenuItem[][]>(() => [
+  [
+    {
+      label: 'Copy curl request',
+      icon: 'i-lucide-terminal',
+      onSelect: () => copySnippet(buildCurl(apiUrl.value), 'curl request'),
+    },
+    {
+      label: 'Copy JavaScript fetch',
+      icon: 'i-lucide-code-2',
+      onSelect: () => copySnippet(buildJsFetch(apiUrl.value), 'JavaScript fetch'),
+    },
+    {
+      label: 'Copy PHP cURL',
+      icon: 'i-lucide-code-2',
+      onSelect: () => copySnippet(buildPhpCurl(apiUrl.value), 'PHP cURL'),
+    },
+    {
+      label: 'Copy API URL',
+      icon: 'i-lucide-link',
+      onSelect: () => copySnippet(apiUrl.value, 'API URL'),
+    },
+  ],
+]);
+
 const { onLoaded } = useScriptNpm<JSConfettiApi>({
   packageName: 'js-confetti',
   file: 'dist/js-confetti.browser.js',
@@ -327,9 +357,24 @@ async function blastConfetti() {
   confetti?.addConfetti({ emojis: ['🥚'], emojiSize: 26 });
 }
 
-async function copyText(text: string | null | undefined, label: string) {
+async function copySnippet(text: string | null | undefined, label: string) {
   if (!text) return;
   await copy(text);
   toast.add({ title: `Copied ${label}`, icon: 'i-lucide-check' });
+}
+
+function buildCurl(url: string | null | undefined) {
+  if (!url) return '';
+  return `curl -L "${url}"`;
+}
+
+function buildJsFetch(url: string | null | undefined) {
+  if (!url) return '';
+  return `fetch('${url}')\n  .then((res) => res.json())\n  .then(console.log)\n  .catch(console.error);`;
+}
+
+function buildPhpCurl(url: string | null | undefined) {
+  if (!url) return '';
+  return `<?php\n$ch = curl_init('${url}');\ncurl_setopt_array($ch, [\n    CURLOPT_RETURNTRANSFER => true,\n    CURLOPT_FOLLOWLOCATION => true,\n]);\n$response = curl_exec($ch);\ncurl_close($ch);\necho $response;\n`;
 }
 </script>

@@ -1,10 +1,7 @@
 <template>
   <UPage>
     <UContainer>
-      <UPageHeader
-        title="About eggs.download"
-        description="Browse and compare Pterodactyl and Pelican eggs with unified search, details, and diffs."
-      />
+      <UPageHeader title="About eggs.download" />
     </UContainer>
 
     <UPageBody>
@@ -34,7 +31,7 @@
                 to="https://github.com/26bz/eggs.download"
                 target="_blank"
                 color="neutral"
-                variant="ghost"
+                variant="subtle"
                 icon="i-simple-icons-github"
               >
                 Source
@@ -42,7 +39,7 @@
               <UButton
                 to="https://ko-fi.com/26bz"
                 target="_blank"
-                color="primary"
+                color="neutral"
                 variant="subtle"
                 icon="i-lucide-heart"
               >

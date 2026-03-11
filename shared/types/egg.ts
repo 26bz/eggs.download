@@ -18,6 +18,7 @@ export interface EggMeta {
   branch: string;
   path: string;
   rawUrl: string;
+  indexedAt?: number;
 }
 
 export interface EggData {

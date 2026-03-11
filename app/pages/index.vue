@@ -39,11 +39,13 @@
               {{ tag }}
             </UButton>
           </div>
-          <div class="text-sm text-gray-500 pt-2 pb-2 flex items-center justify-center gap-2">
+          <div
+            class="text-sm text-gray-500 dark:text-gray-400 pt-2 pb-2 flex items-center justify-center gap-2"
+          >
             <UIcon name="tabler:egg-cracked-filled" class="text-yellow-600" />
             {{ searchTerm ? 'No results. Try another term.' : 'Start typing to search eggs.' }}
           </div>
-          <div class="text-xs text-gray-500">
+          <div class="text-xs text-gray-500 dark:text-gray-400">
             <template v-if="status === 'pending'">
               <USkeleton class="h-4 w-40" />
             </template>
@@ -55,7 +57,7 @@
             </template>
             <template v-else-if="!query">
               {{ eggs.length.toLocaleString() }} eggs indexed
-              <span v-if="lastUpdated" class="text-xs text-gray-500">
+              <span v-if="lastUpdated" class="text-xs text-gray-500 dark:text-gray-400">
                 · updated
                 <NuxtTime
                   :datetime="lastUpdated"
