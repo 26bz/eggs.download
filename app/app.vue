@@ -1,4 +1,22 @@
-<script setup>
+<script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui';
+
+const footerLinks: NavigationMenuItem[] = [
+  {
+    label: 'Source',
+    to: 'https://github.com/26bz/eggs.download',
+    target: '_blank',
+  },
+  {
+    label: 'Donate',
+    to: 'https://ko-fi.com/26bz',
+    target: '_blank',
+  },
+  {
+    label: 'About',
+    to: '/about',
+  },
+];
 useHead({
   titleTemplate: (titleChunk) =>
     titleChunk ? `${titleChunk} | eggs.download` : 'eggs.download - Pterodactyl & Pelican eggs',
@@ -36,22 +54,12 @@ useSeoMeta({
         </p>
       </template>
 
+      <UNavigationMenu :items="footerLinks" variant="link" />
+
       <template #right>
-        <UFieldGroup class="gap-4 text-muted text-sm" align="center">
-          <NuxtLink to="https://github.com/26bz/eggs.download" target="_blank">
-            <UIcon name="i-simple-icons-github" />
-            Source
-          </NuxtLink>
-          <NuxtLink to="https://ko-fi.com/26bz" target="_blank">
-            <UIcon name="i-lucide-heart" />
-            Donate
-          </NuxtLink>
-          <NuxtLink to="/about">
-            <UIcon name="i-lucide-info" />
-            About
-          </NuxtLink>
-          <UColorModeButton size="xs" color="neutral" variant="ghost" />
-        </UFieldGroup>
+        <div class="flex items-center justify-end gap-2">
+          <UColorModeButton size="xs" color="neutral" variant="ghost" aria-label="Toggle color mode" />
+        </div>
       </template>
     </UFooter>
   </UApp>
