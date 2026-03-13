@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     '#shared/*': resolve(__dirname, 'shared/*'),
     '#shared/types': resolve(__dirname, 'shared/types'),
   },
-  modules: ['@nuxt/ui', '@nuxtjs/mdc', '@nuxt/scripts'],
+  modules: ["nitro-cloudflare-dev", '@nuxt/ui', '@nuxtjs/mdc', '@nuxt/scripts'],
 
   devtools: {
     enabled: true,
@@ -48,7 +48,7 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
-    preset: 'cloudflare_module',
+    preset: "cloudflare_module",
     cloudflare: {
       wrangler: {
         kv_namespaces: [
@@ -58,6 +58,9 @@ export default defineNuxtConfig({
           },
         ],
       },
+
+      deployConfig: true,
+      nodeCompat: true
     },
     storage: {
       cache: { driver: 'cloudflare-kv-binding', binding: 'CACHE' },
