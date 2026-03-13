@@ -40,6 +40,8 @@ useSeoMeta({
 
 <template>
   <UApp>
+    <NuxtAnnouncer />
+    <NuxtRouteAnnouncer />
     <NuxtLoadingIndicator />
     <UMain>
       <NuxtPage />

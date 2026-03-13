@@ -47,6 +47,11 @@ export default defineNuxtConfig({
       },
     },
   },
+  experimental: {
+    payloadExtraction: 'client',
+    normalizeComponentNames: true,
+    viewTransition: true,
+  },
   nitro: {
     preset: "cloudflare_module",
     cloudflare: {
@@ -64,6 +69,11 @@ export default defineNuxtConfig({
     },
     storage: {
       cache: { driver: 'cloudflare-kv-binding', binding: 'CACHE' },
+    },
+  },
+  vite: {
+    optimizeDeps: {
+      include: ['@vueuse/core'],
     },
   },
 });

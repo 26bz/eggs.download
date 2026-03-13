@@ -232,7 +232,7 @@ const proseClasses =
   'prose prose-sm dark:prose-invert max-w-none [&_pre]:!bg-gray-950/5 [&_pre]:dark:!bg-gray-50/5 [&_pre]:!rounded-lg [&_pre]:!p-3 [&_pre]:!text-xs [&_pre]:!m-0 [&_pre]:!whitespace-pre-wrap [&_pre]:!break-all [&_pre]:!font-mono';
 
 definePageMeta({
-  validate: (route) => typeof route.params.slug === 'string' && !!route.params.slug,
+  validate: (r) => typeof r.params.slug === 'string' && !!r.params.slug,
 });
 
 const variableColumns: TableColumn<EggVariable>[] = [
@@ -246,10 +246,9 @@ const variableColumns: TableColumn<EggVariable>[] = [
   },
 ];
 
-const { data, status } = await useAsyncData(
-  computed(() => `egg:${slug.value}`),
-  (_nuxtApp, { signal }) => $fetch<EggResponse>(`/api/eggs/${slug.value}`, { signal }),
-);
+const { data, status } = await useApiFetch<EggResponse>(computed(() => `/api/eggs/${slug.value}`), {
+  key: `egg:${slug.value}`,
+});
 
 const egg = computed<EggData | null>(() => data.value?.egg ?? null);
 const meta = computed<EggMeta | null>(() => data.value?.meta ?? null);
@@ -357,9 +356,11 @@ async function blastConfetti() {
   confetti?.addConfetti({ emojis: ['🥚'], emojiSize: 26 });
 }
 
+const { polite } = useAnnouncer();
 async function copySnippet(text: string | null | undefined, label: string) {
   if (!text) return;
   await copy(text);
+  polite(`Copied ${label}`);
   toast.add({ title: `Copied ${label}`, icon: 'i-lucide-check' });
 }
 

@@ -19,22 +19,27 @@
     "fmt:check": "oxfmt --check",
     "typecheck": "nuxt typecheck",
     "deploy": "pnpm run build && wrangler deploy",
-    "cf-typegen": "wrangler types"
+    "cf-typegen": "wrangler types",
+    "build:profile": "nuxt build --profile"
   },
   "dependencies": {
     "@nuxt/scripts": "1.0.0-beta.19",
     "@nuxt/ui": "^4.5.1",
     "@nuxtjs/mdc": "0.20.2",
     "@vueuse/core": "^14.2.1",
-    "nuxt": "^4.3.1",
+    "nuxt": "^4.4.2",
     "tailwindcss": "^4.2.1",
     "v-gsap-nuxt": "1.5.12"
   },
   "devDependencies": {
-    "@types/node": "^25.3.5",
+    "@iconify-json/lucide": "^1.2.97",
+    "@iconify-json/noto": "^1.2.7",
+    "@iconify-json/simple-icons": "^1.2.73",
+    "@iconify-json/tabler": "^1.2.31",
+    "@types/node": "latest",
     "nitro-cloudflare-dev": "^0.2.2",
-    "oxfmt": "^0.36.0",
-    "oxlint": "^0.15.11",
+    "oxfmt": "^0.40.0",
+    "oxlint": "^1.55.0",
     "oxlint-tsgolint": "^0.16.0",
     "typescript": "^5.9.3",
     "vue-tsc": "^3.2.5",

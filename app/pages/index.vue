@@ -140,21 +140,18 @@ onMounted(() => {
   cycleTyping();
 });
 
-const { data, status, refresh } = await useAsyncData(
-  'egg-index',
-  (_nuxtApp, { signal }) => $fetch<EggListItem[]>('/api/eggs', { signal }),
-  {
-    transform: (eggs) =>
-      eggs.map((e) => ({
-        slug: e.slug,
-        name: e.name,
-        category: e.category,
-        repo: e.repo,
-        source: e.source,
-      })),
-    default: () => [] as EggListItem[],
-  },
-);
+const { data, status, refresh } = await useApiFetch<EggListItem[]>('/api/eggs', {
+  key: 'egg-index',
+  transform: (eggs: EggListItem[]) =>
+    eggs.map((e: EggListItem) => ({
+      slug: e.slug,
+      name: e.name,
+      category: e.category,
+      repo: e.repo,
+      source: e.source,
+    })),
+  default: () => [] as EggListItem[],
+});
 
 const eggs = computed<EggListItem[]>(() => data.value ?? []);
 const {
