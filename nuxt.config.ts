@@ -6,7 +6,34 @@ export default defineNuxtConfig({
     '#shared/*': resolve(__dirname, 'shared/*'),
     '#shared/types': resolve(__dirname, 'shared/types'),
   },
-  modules: ["nitro-cloudflare-dev", '@nuxt/ui', '@nuxtjs/mdc', '@nuxt/scripts'],
+  modules: ["nitro-cloudflare-dev", '@nuxt/ui', '@nuxtjs/mdc', '@nuxt/scripts', 'nuxt-security'],
+
+  security: {
+    strict: true,
+    hidePoweredBy: true,
+    removeLoggers: true,
+    nonce: false, // Disabled to allow 'unsafe-inline' styles for Nuxt UI
+    rateLimiter: {
+      tokensPerInterval: 200,
+      interval: 3600000,
+      throwError: true,
+      ipHeader: 'cf-connecting-ip',
+    },
+    headers: {
+      contentSecurityPolicy: {
+        'img-src': ["'self'", "data:", "https://raw.githubusercontent.com", "https://github.com", "https://user-images.githubusercontent.com", "https://avatars.githubusercontent.com"],
+        'style-src': ["'self'", "'unsafe-inline'"],
+        'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", "http:", "https:"],
+        'connect-src': ["'self'", "https://api.github.com", "https://raw.githubusercontent.com", "ws://localhost:*", "http://localhost:*", "https://*.githubusercontent.com"],
+      },
+      permissionsPolicy: {
+        'camera': ['self'],
+        'microphone': ['self'],
+        'geolocation': ['self'],
+        'web-share': false,
+      }
+    },
+  },
 
   devtools: {
     enabled: true,
@@ -35,20 +62,28 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/about': { prerender: true },
-    '/api/eggs': { swr: 60 * 30 }, // 30 min stale-while-revalidate
-    '/api/eggs/**': { swr: 60 * 60 }, // 1 hour stale-while-revalidate
-    '/**': {
-      headers: {
-        'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-        'X-Frame-Options': 'SAMEORIGIN',
-        'X-Content-Type-Options': 'nosniff',
-        'Referrer-Policy': 'strict-origin-when-cross-origin',
-        'Permissions-Policy': 'camera=(), geolocation=(), microphone=()',
-      },
+    '/api/eggs': { 
+      swr: 60 * 30,
+      security: {
+        corsHandler: {
+          origin: '*',
+          methods: ['GET', 'HEAD'],
+        }
+      }
+    },
+    '/api/eggs/**': { 
+      swr: 60 * 60,
+      security: {
+        corsHandler: {
+          origin: '*',
+          methods: ['GET', 'HEAD'],
+        }
+      }
     },
   },
   experimental: {
-    payloadExtraction: 'client',
+    inlineRouteRules: true,
+    payloadExtraction: false,
     normalizeComponentNames: true,
     viewTransition: true,
   },

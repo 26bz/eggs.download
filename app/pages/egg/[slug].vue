@@ -69,6 +69,7 @@
                     variant="subtle"
                     icon="i-lucide-download"
                     :to="`/api/eggs/${slug}`"
+                    external
                     target="_blank"
                     download
                     @click="blastConfetti"

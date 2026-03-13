@@ -38,6 +38,7 @@
     "@iconify-json/tabler": "^1.2.31",
     "@types/node": "latest",
     "nitro-cloudflare-dev": "^0.2.2",
+    "nuxt-security": "^2.5.1",
     "oxfmt": "^0.40.0",
     "oxlint": "^1.55.0",
     "oxlint-tsgolint": "^0.16.0",
