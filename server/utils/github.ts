@@ -3,7 +3,9 @@ import type { GitTreeItem } from '#shared/types/github';
 
 function getToken(): string | undefined {
   try {
-    return useRuntimeConfig().githubToken as string | undefined;
+    const config = useRuntimeConfig();
+    const token = config.githubToken;
+    return typeof token === 'string' ? token : undefined;
   } catch {
     // fallback during early server init
     return process.env.GITHUB_TOKEN;
@@ -36,6 +38,7 @@ async function githubFetch<T>(url: string): Promise<T> {
       }
     },
   });
+  // oxlint-disable-next-line no-unsafe-type-assertion
   return res as T;
 }
 
@@ -58,9 +61,12 @@ export async function fetchTreeWithBranch(
         return { branch, tree: res.tree };
       }
     } catch (error: unknown) {
-      const e = error as { statusCode?: number; message?: string };
-      if (e.statusCode === 429) throw error; // propagate rate limit errors
-      console.warn(`[egghub] tree fetch failed for ${owner}/${repo}@${branch}:`, e?.message);
+      // oxlint-disable-next-line no-unsafe-type-assertion
+      const err = error as Record<string, unknown>;
+      const statusCode = typeof err?.statusCode === 'number' ? err.statusCode : undefined;
+      if (statusCode === 429) throw error;
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(`[egghub] tree fetch failed for ${owner}/${repo}@${branch}:`, message);
     }
   }
 
@@ -79,9 +85,12 @@ async function getPreferredBranches(owner: string, repo: string): Promise<string
       return Array.from(new Set([repoMeta.default_branch, 'main', 'master']));
     }
   } catch (error: unknown) {
-    const e = error as { statusCode?: number; message?: string };
-    if (e.statusCode === 429) throw error;
-    console.warn(`[egghub] repo meta fetch failed for ${owner}/${repo}:`, e?.message);
+    // oxlint-disable-next-line no-unsafe-type-assertion
+    const err = error as Record<string, unknown>;
+    const statusCode = typeof err?.statusCode === 'number' ? err.statusCode : undefined;
+    if (statusCode === 429) throw error;
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`[egghub] repo meta fetch failed for ${owner}/${repo}:`, message);
   }
   return ['main', 'master'];
 }

@@ -28,6 +28,7 @@ export default defineEventHandler(async (event): Promise<EggDetail> => {
     });
     const text = data ? data.toString('utf8') : null;
     if (!text) throw createError({ statusCode: 502, statusMessage: 'Failed to load egg JSON' });
+    // oxlint-disable-next-line no-unsafe-type-assertion
     egg = JSON.parse(text) as EggDetail['egg'];
   } catch {
     throw createError({ statusCode: 502, statusMessage: 'Failed to fetch egg JSON from GitHub' });

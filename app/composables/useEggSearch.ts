@@ -80,7 +80,7 @@ export function useEggSearch(eggs: Ref<EggListItem[]>, options: UseEggSearchOpti
     return indexedEggs.value
       .map((egg) => ({ egg, score: scoreMatch(egg, terms) }))
       .filter((item) => item.score > 0)
-      .sort(
+      .toSorted(
         (a, b) =>
           b.score - a.score ||
           `${a.egg.repo}/${a.egg.slug}`.localeCompare(`${b.egg.repo}/${b.egg.slug}`),
@@ -91,7 +91,7 @@ export function useEggSearch(eggs: Ref<EggListItem[]>, options: UseEggSearchOpti
 
   const onSelect = (item: CommandPaletteItem | null) => {
     if (item && 'value' in item && item.value) {
-      navigateTo(`/egg/${item.value}`);
+      void navigateTo(`/egg/${item.value}`);
     }
     selectedItem.value = null;
     searchTerm.value = '';

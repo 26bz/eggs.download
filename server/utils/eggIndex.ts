@@ -99,10 +99,9 @@ async function buildIndex(): Promise<EggEntry[]> {
     const batchResults = await Promise.allSettled(batch.map((job) => processRepo(job)));
     for (const result of batchResults) {
       if (result.status === 'rejected') {
-        console.error(
-          '[egghub] Failed to index repo:',
-          (result.reason as Error)?.message ?? result.reason,
-        );
+        const reason = result.reason;
+        const message = reason instanceof Error ? reason.message : String(reason);
+        console.error('[egghub] Failed to index repo:', message);
       }
     }
   }

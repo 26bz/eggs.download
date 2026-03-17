@@ -2,11 +2,9 @@
   <UContainer class="min-h-screen flex items-center justify-center py-12">
     <div class="w-full max-w-xl space-y-4 text-center hero" :class="{ 'hero--enter': heroReady }">
       <div class="space-y-2">
-        <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-[0.18em]">
-          eggs.download
-        </p>
+        <p class="text-sm font-medium text-muted uppercase tracking-[0.18em]">eggs.download</p>
         <h1 class="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Find your server egg</h1>
-        <p class="mt-1 text-gray-500 dark:text-gray-400 type-line">
+        <p class="mt-1 text-muted type-line">
           {{ typedLine }}
           <span class="type-caret" aria-hidden="true"></span>
         </p>
@@ -21,6 +19,7 @@
         icon="noto:egg"
         :selected-icon="null"
         class="w-full"
+        aria-label="Search eggs"
         @update:model-value="onSelect"
       >
         <template #empty>
@@ -39,13 +38,11 @@
               {{ tag }}
             </UButton>
           </div>
-          <div
-            class="text-sm text-gray-500 dark:text-gray-400 pt-2 pb-2 flex items-center justify-center gap-2"
-          >
+          <div class="text-sm text-muted pt-2 pb-2 flex items-center justify-center gap-2">
             <UIcon name="tabler:egg-cracked-filled" class="text-yellow-600" />
             {{ searchTerm ? 'No results. Try another term.' : 'Start typing to search eggs.' }}
           </div>
-          <div class="text-xs text-gray-500 dark:text-gray-400">
+          <div class="text-xs text-muted">
             <template v-if="status === 'pending'">
               <USkeleton class="h-4 w-40" />
             </template>
@@ -57,7 +54,7 @@
             </template>
             <template v-else-if="!query">
               {{ eggs.length.toLocaleString() }} eggs indexed
-              <span v-if="lastUpdated" class="text-xs text-gray-500 dark:text-gray-400">
+              <span v-if="lastUpdated" class="text-xs text-muted">
                 · updated
                 <NuxtTime
                   :datetime="lastUpdated"

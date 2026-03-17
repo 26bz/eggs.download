@@ -25,3 +25,56 @@
 *::-webkit-scrollbar {
   display: none;
 }
+
+.dark .text-muted {
+  color: #a1a1a1 !important;
+}
+
+.dark .text-dimmed {
+  color: #8a8a8a !important;
+}
+
+.dark .shiki,
+.dark pre.shiki {
+  --shiki-dark-comment: #9ca3af !important;
+  --shiki-dark-keyword: #c792ea !important;
+  --shiki-dark-string: #a5d6ff !important;
+  --shiki-dark-property: #7dd3fc !important;
+}
+
+.dark .shiki span[style*='color: #6a737d'],
+.dark .shiki span[style*='color: #6A737D'] {
+  color: #9ca3af !important;
+}
+
+.dark .shiki span[style*='color: #6f5d90'],
+.dark .shiki span[style*='color: #6b5a8b'] {
+  color: #c792ea !important;
+}
+
+.dark .shiki span[style*='color: #4f7198'],
+.dark .shiki span[style*='color: #4d6e92'],
+.dark .shiki span[style*='color: #607792'],
+.dark .shiki span[style*='color: #637c98'] {
+  color: #7dd3fc !important;
+}
+
+.dark .shiki span[style*='color: #8f4b52'],
+.dark .shiki span[style*='color: #c25f6a'] {
+  color: #f87171 !important;
+}
+
+.dark .shiki span[style*='color: #565b60'],
+.dark .shiki span[style*='color: #70777e'] {
+  color: #9ca3af !important;
+}
+
+.dark pre.shiki,
+pre.shiki {
+  outline: none;
+}
+
+pre.shiki:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}

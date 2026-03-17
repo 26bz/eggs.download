@@ -22,9 +22,9 @@
         </div>
 
         <div v-else-if="status === 'error'" class="text-center py-16 space-y-4">
-          <UIcon name="i-lucide-circle-x" class="mx-auto text-4xl text-gray-400" />
+          <UIcon name="i-lucide-circle-x" class="mx-auto text-4xl text-muted" />
           <h1 class="text-xl font-semibold">Egg not found</h1>
-          <p class="text-gray-500">
+          <p class="text-muted">
             No egg matches the slug
             <code class="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 rounded">{{
               slug
@@ -46,11 +46,9 @@
                   <h1 class="text-3xl font-semibold">
                     {{ displayName }}
                   </h1>
-                  <div
-                    class="mt-1 text-sm text-gray-600 dark:text-gray-400 flex flex-wrap items-center gap-x-2 gap-y-1"
-                  >
+                  <div class="mt-1 text-sm text-muted flex flex-wrap items-center gap-x-2 gap-y-1">
                     <span v-if="meta?.category">{{ meta.category }}</span>
-                    <span v-if="meta" class="text-gray-300 dark:text-gray-700">·</span>
+                    <span v-if="meta" class="text-dimmed">·</span>
                     <NuxtLink
                       v-if="githubHref"
                       :to="githubHref"
@@ -90,14 +88,11 @@
                 </div>
               </div>
 
-              <p
-                v-if="egg.description"
-                class="mt-4 text-gray-600 dark:text-gray-400 leading-relaxed"
-              >
+              <p v-if="egg.description" class="mt-4 text-muted leading-relaxed">
                 {{ egg.description }}
               </p>
 
-              <div class="mt-3 flex flex-wrap gap-3 text-xs text-gray-600 dark:text-gray-400">
+              <div class="mt-3 flex flex-wrap gap-3 text-xs text-muted">
                 <span v-if="egg.exported_at">
                   <span class="font-medium">Exported:</span>
                   <NuxtTime
@@ -147,7 +142,7 @@
                   v-if="item.value === 'install' && activeAccordion === 'install'"
                   class="space-y-2"
                 >
-                  <div class="text-xs text-gray-500 flex flex-wrap gap-4 mb-1">
+                  <div class="text-xs text-muted flex flex-wrap gap-4 mb-1">
                     <span
                       >Container:
                       <code class="font-mono">{{
@@ -185,7 +180,7 @@
                     class="flex-1"
                     :ui="{ tbody: 'divide-y divide-default' }"
                   />
-                  <p v-else class="text-sm text-gray-500">No variables defined for this egg.</p>
+                  <p v-else class="text-sm text-muted">No variables defined for this egg.</p>
                 </div>
 
                 <div v-else-if="item.value === 'raw' && activeAccordion === 'raw'">
@@ -230,7 +225,17 @@ declare global {
 const route = useRoute();
 const slug = computed(() => route.params.slug as string);
 const proseClasses =
-  'prose prose-sm dark:prose-invert max-w-none [&_pre]:!bg-gray-950/5 [&_pre]:dark:!bg-gray-50/5 [&_pre]:!rounded-lg [&_pre]:!p-3 [&_pre]:!text-xs [&_pre]:!m-0 [&_pre]:!whitespace-pre-wrap [&_pre]:!break-all [&_pre]:!font-mono';
+  'prose prose-sm dark:prose-invert max-w-none [&_pre]:!bg-gray-950/5 [&_pre]:dark:!bg-gray-50/5 [&_pre]:!rounded-lg [&_pre]:!p-3 [&_pre]:!text-xs [&_pre]:!m-0 [&_pre]:!whitespace-pre-wrap [&_pre]:!break-all [&_pre]:!font-mono [&_pre]:focus-visible:outline-2 [&_pre]:focus-visible:outline-primary';
+
+onMounted(() => {
+  nextTick(() => {
+    document.querySelectorAll('pre.shiki, pre[class*="language-"]').forEach((el) => {
+      if (!el.hasAttribute('tabindex')) {
+        el.setAttribute('tabindex', '0');
+      }
+    });
+  });
+});
 
 definePageMeta({
   validate: (r) => typeof r.params.slug === 'string' && !!r.params.slug,
@@ -247,9 +252,12 @@ const variableColumns: TableColumn<EggVariable>[] = [
   },
 ];
 
-const { data, status } = await useApiFetch<EggResponse>(computed(() => `/api/eggs/${slug.value}`), {
-  key: `egg:${slug.value}`,
-});
+const { data, status } = await useApiFetch<EggResponse>(
+  computed(() => `/api/eggs/${slug.value}`),
+  {
+    key: `egg:${slug.value}`,
+  },
+);
 
 const egg = computed<EggData | null>(() => data.value?.egg ?? null);
 const meta = computed<EggMeta | null>(() => data.value?.meta ?? null);

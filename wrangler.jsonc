@@ -1,16 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "eggs-download",
+  "name": "eggsdownload",
   "compatibility_date": "2026-03-10",
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   "main": "./.output/server/index.mjs",
   "assets": {
     "binding": "ASSETS",
-    "directory": "./.output/public/"
+    "directory": "./.output/public/",
   },
-  "compatibility_flags": [
-    "nodejs_compat"
-  ]
+  "compatibility_flags": ["nodejs_compat"],
 }

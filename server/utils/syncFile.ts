@@ -3,11 +3,20 @@ import type { AllowedFileMap, MetaEntry, SyncResult, SyncTarget } from '#shared/
 const STORAGE_META_PREFIX = 'meta:';
 const STORAGE_FILE_PREFIX = 'file:';
 
+function isMetaEntry(value: unknown): value is MetaEntry {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    ('etag' in value || 'lastModified' in value || 'syncedAt' in value)
+  );
+}
+
 async function readStorageMeta(filename: string) {
   const storage = useStorage('cache');
   const raw = await storage.getItem(STORAGE_META_PREFIX + filename);
   if (!raw || typeof raw !== 'string') return undefined;
-  return JSON.parse(raw) as MetaEntry;
+  const parsed: unknown = JSON.parse(raw);
+  return isMetaEntry(parsed) ? parsed : undefined;
 }
 
 async function writeStorageMeta(filename: string, entry: MetaEntry) {

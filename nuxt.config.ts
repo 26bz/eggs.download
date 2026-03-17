@@ -6,32 +6,56 @@ export default defineNuxtConfig({
     '#shared/*': resolve(__dirname, 'shared/*'),
     '#shared/types': resolve(__dirname, 'shared/types'),
   },
-  modules: ["nitro-cloudflare-dev", '@nuxt/ui', '@nuxtjs/mdc', '@nuxt/scripts', 'nuxt-security'],
+  modules: [
+    'nitro-cloudflare-dev',
+    '@nuxt/ui',
+    '@nuxtjs/mdc',
+    '@nuxt/scripts',
+    'nuxt-security',
+    '@nuxt/a11y',
+    '@nuxt/hints',
+  ],
 
   security: {
-    strict: true,
+    strict: false, // Disable strict CSP to allow 'unsafe-inline' styles (hashes cause unsafe-inline to be ignored)
     hidePoweredBy: true,
     removeLoggers: true,
-    nonce: false, // Disabled to allow 'unsafe-inline' styles for Nuxt UI
+    nonce: false,
+    ssg: false,
+    sri: false, // Disable Subresource Integrity hashes
     rateLimiter: {
-      tokensPerInterval: 200,
+      tokensPerInterval: 420,
       interval: 3600000,
       throwError: true,
       ipHeader: 'cf-connecting-ip',
     },
     headers: {
       contentSecurityPolicy: {
-        'img-src': ["'self'", "data:", "https://raw.githubusercontent.com", "https://github.com", "https://user-images.githubusercontent.com", "https://avatars.githubusercontent.com"],
+        'img-src': [
+          "'self'",
+          'data:',
+          'https://raw.githubusercontent.com',
+          'https://github.com',
+          'https://user-images.githubusercontent.com',
+          'https://avatars.githubusercontent.com',
+        ],
         'style-src': ["'self'", "'unsafe-inline'"],
-        'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", "http:", "https:"],
-        'connect-src': ["'self'", "https://api.github.com", "https://raw.githubusercontent.com", "ws://localhost:*", "http://localhost:*", "https://*.githubusercontent.com"],
+        'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'http:', 'https:'],
+        'connect-src': [
+          "'self'",
+          'https://api.github.com',
+          'https://raw.githubusercontent.com',
+          'ws://localhost:*',
+          'http://localhost:*',
+          'https://*.githubusercontent.com',
+        ],
       },
       permissionsPolicy: {
-        'camera': ['self'],
-        'microphone': ['self'],
-        'geolocation': ['self'],
+        camera: ['self'],
+        microphone: ['self'],
+        geolocation: ['self'],
         'web-share': false,
-      }
+      },
     },
   },
 
@@ -51,7 +75,7 @@ export default defineNuxtConfig({
         default: 'github-light',
         dark: 'github-dark',
       },
-      langs: ['json', 'shell', 'bash', 'sh'],
+      langs: ['json', 'shell', 'bash', 'sh', 'javascript', 'js'],
     },
   },
 
@@ -62,23 +86,24 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/about': { prerender: true },
-    '/api/eggs': { 
+    '/api-docs': { prerender: true },
+    '/api/eggs': {
       swr: 60 * 30,
       security: {
         corsHandler: {
           origin: '*',
           methods: ['GET', 'HEAD'],
-        }
-      }
+        },
+      },
     },
-    '/api/eggs/**': { 
+    '/api/eggs/**': {
       swr: 60 * 60,
       security: {
         corsHandler: {
           origin: '*',
           methods: ['GET', 'HEAD'],
-        }
-      }
+        },
+      },
     },
   },
   experimental: {
@@ -88,7 +113,7 @@ export default defineNuxtConfig({
     viewTransition: true,
   },
   nitro: {
-    preset: "cloudflare_module",
+    preset: 'cloudflare_module',
     cloudflare: {
       wrangler: {
         kv_namespaces: [
@@ -100,7 +125,7 @@ export default defineNuxtConfig({
       },
 
       deployConfig: true,
-      nodeCompat: true
+      nodeCompat: true,
     },
     storage: {
       cache: { driver: 'cloudflare-kv-binding', binding: 'CACHE' },

@@ -12,13 +12,16 @@ export default defineNitroPlugin(() => {
   const prewarmAll = String(process.env.HOT_EGGS_ALL || '').toLowerCase() === 'true';
   const hotIntervalMs = Number(process.env.HOT_EGGS_INTERVAL_MS || '') || 0;
 
-  const targets = Object.entries(FILE_ALLOWLIST).map(([filename, url]) => ({ filename, url }));
+  const allowlistTargets = Object.entries(FILE_ALLOWLIST).map(([filename, url]) => ({
+    filename,
+    url,
+  }));
 
   const syncAllowlist = async () => {
-    if (!targets.length) return;
+    if (!allowlistTargets.length) return;
 
-    for (let i = 0; i < targets.length; i += maxConcurrent) {
-      const batch = targets.slice(i, i + maxConcurrent);
+    for (let i = 0; i < allowlistTargets.length; i += maxConcurrent) {
+      const batch = allowlistTargets.slice(i, i + maxConcurrent);
       // oxlint:disable-next-line no-await-in-loop
       await Promise.allSettled(
         batch.map(async (target) => {
@@ -38,12 +41,12 @@ export default defineNitroPlugin(() => {
     const index = await getEggIndex();
     const metaBySlug = new Map(index.map((item) => [item.slug, item]));
 
-    const targets = (
+    const eggTargets = (
       prewarmAll ? Array.from(metaBySlug.values()) : hotSlugs.map((slug) => metaBySlug.get(slug))
     ).filter(Boolean);
 
-    for (let i = 0; i < targets.length; i += maxConcurrent) {
-      const batch = targets.slice(i, i + maxConcurrent);
+    for (let i = 0; i < eggTargets.length; i += maxConcurrent) {
+      const batch = eggTargets.slice(i, i + maxConcurrent);
       await Promise.allSettled(
         batch.map(async (eggMeta) => {
           if (!eggMeta) return;
@@ -68,23 +71,23 @@ export default defineNitroPlugin(() => {
     }
   };
 
-  if (targets.length) {
-    syncAllowlist();
+  if (allowlistTargets.length) {
+    void syncAllowlist();
   }
 
   if (prewarmAll || hotSlugs.length) {
-    syncHotEggs();
+    void syncHotEggs();
   }
 
-  if (intervalMs > 0 && targets.length) {
+  if (intervalMs > 0 && allowlistTargets.length) {
     setInterval(() => {
-      syncAllowlist();
+      void syncAllowlist();
     }, intervalMs);
   }
 
   if (hotIntervalMs > 0 && (prewarmAll || hotSlugs.length)) {
     setInterval(() => {
-      syncHotEggs();
+      void syncHotEggs();
     }, hotIntervalMs);
   }
 });

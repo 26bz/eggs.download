@@ -13,6 +13,10 @@ const footerLinks: NavigationMenuItem[] = [
     target: '_blank',
   },
   {
+    label: 'API',
+    to: '/api-docs',
+  },
+  {
     label: 'About',
     to: '/about',
   },
@@ -60,7 +64,12 @@ useSeoMeta({
 
       <template #right>
         <div class="flex items-center justify-end gap-2">
-          <UColorModeButton size="xs" color="neutral" variant="ghost" aria-label="Toggle color mode" />
+          <UColorModeButton
+            size="xs"
+            color="neutral"
+            variant="ghost"
+            aria-label="Toggle color mode"
+          />
         </div>
       </template>
     </UFooter>
