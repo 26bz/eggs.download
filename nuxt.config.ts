@@ -91,7 +91,6 @@ export default defineNuxtConfig({
     '/about': { prerender: true },
     '/api-docs': { prerender: true },
     '/api/eggs': {
-      swr: 60 * 30,
       security: {
         corsHandler: {
           origin: '*',

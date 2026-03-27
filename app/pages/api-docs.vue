@@ -1,25 +1,16 @@
 <template>
   <UPage>
     <UContainer>
-      <UPageHeader
-        title="API Documentation"
-        description="Use eggs.download in your custom resources"
-      />
+      <UPageHeader title="API Documentation" description="Use eggs.download in your custom resources" />
     </UContainer>
 
     <UPageBody>
       <UContainer>
-        <div class="space-y-6">
+        <div class="space-y-5">
           <UCard>
-            <template #header>
-              <h2 class="text-lg font-semibold">Overview</h2>
-            </template>
-            <div class="space-y-4 text-sm text-muted">
-              <p>
-                The eggs.download API lets you fetch Pterodactyl and Pelican egg configurations
-                directly in your applications, scripts, or custom panel resources.
-              </p>
-              <p>All endpoints return JSON and support CORS, so you can call them from anywhere.</p>
+            <div class="space-y-2 text-sm text-muted">
+              <p>JSON API for Pterodactyl and Pelican eggs.</p>
+              <p>CORS enabled. Rate limit: <strong>420 req/hour/IP</strong>.</p>
             </div>
           </UCard>
 
@@ -27,81 +18,47 @@
             <template #header>
               <h2 class="text-lg font-semibold">Endpoints</h2>
             </template>
-            <div class="space-y-6 text-sm">
-              <div>
-                <div class="flex items-center gap-2 mb-2">
-                  <UBadge color="success" variant="subtle">GET</UBadge>
+            <div class="space-y-3 text-sm">
+              <div class="rounded-lg border border-default p-3">
+                <div class="flex items-center gap-2">
+                  <UBadge color="success" variant="subtle" size="sm">GET</UBadge>
                   <code class="text-sm font-mono">/api/eggs</code>
                 </div>
-                <p class="text-muted mb-2">
-                  Returns the full index of all available eggs with metadata.
-                </p>
-                <div :class="proseClasses">
-                  <MDC :value="curlIndexCode" />
-                </div>
+                <p class="mt-1 text-muted">Egg index (supports filters).</p>
               </div>
 
-              <USeparator />
-
-              <div>
-                <div class="flex items-center gap-2 mb-2">
-                  <UBadge color="success" variant="subtle">GET</UBadge>
+              <div class="rounded-lg border border-default p-3">
+                <div class="flex items-center gap-2">
+                  <UBadge color="success" variant="subtle" size="sm">GET</UBadge>
                   <code class="text-sm font-mono">/api/eggs/:slug</code>
                 </div>
-                <p class="text-muted mb-2">
-                  Returns full egg details including the raw JSON config, metadata, and README if
-                  available.
-                </p>
-                <div :class="proseClasses">
-                  <MDC :value="curlSlugCode" />
-                </div>
+                <p class="mt-1 text-muted">Full egg JSON + metadata + optional README.</p>
               </div>
             </div>
           </UCard>
 
           <UCard>
             <template #header>
-              <h2 class="text-lg font-semibold">Rate Limits</h2>
-            </template>
-            <div class="space-y-3 text-sm text-muted">
-              <p>To keep things fair for everyone, there's a simple rate limit in place:</p>
-              <ul class="list-disc pl-5 space-y-1">
-                <li><strong>420 requests</strong> per hour per IP</li>
-                <li>Responses are cached, so repeated requests are fast</li>
-                <li>If you hit the limit, wait a bit and try again</li>
-              </ul>
-              <p class="text-dimmed">
-                This is pretty generous for most use cases. If you need more, reach out.
-              </p>
-            </div>
-          </UCard>
-
-          <UCard>
-            <template #header>
-              <h2 class="text-lg font-semibold">Example: Fetch an Egg in JavaScript</h2>
+              <h2 class="text-lg font-semibold">Query Params</h2>
             </template>
             <div :class="proseClasses">
-              <MDC :value="jsFetchCode" />
+              <MDC :value="queryParamsCode" />
             </div>
           </UCard>
 
           <UCard>
             <template #header>
-              <h2 class="text-lg font-semibold">Response Structure</h2>
+              <h2 class="text-lg font-semibold">Examples</h2>
             </template>
-            <div class="space-y-4 text-sm">
-              <div>
-                <p class="font-medium text-highlighted mb-2">Index Response</p>
-                <div :class="proseClasses">
-                  <MDC :value="indexResponseCode" />
-                </div>
+            <div class="space-y-3">
+              <div :class="proseClasses">
+                <MDC :value="filterQueryCode" />
               </div>
-
-              <div>
-                <p class="font-medium text-highlighted mb-2">Detail Response</p>
-                <div :class="proseClasses">
-                  <MDC :value="detailResponseCode" />
-                </div>
+              <div :class="proseClasses">
+                <MDC :value="namesQueryCode" />
+              </div>
+              <div :class="proseClasses">
+                <MDC :value="curlSlugCode" />
               </div>
             </div>
           </UCard>
@@ -144,60 +101,35 @@ onMounted(() => {
   });
 });
 
-const curlIndexCode = `\`\`\`bash
-curl https://eggs.download/api/eggs
+const filterQueryCode = `\`\`\`bash
+# All games from Pterodactyl game-eggs
+curl "https://eggs.download/api/eggs?source=pterodactyl&repo=game-eggs"
+\`\`\``;
+
+const queryParamsCode = `\`\`\`md
+source
+Filter by source (\`pterodactyl\`, \`pelican\`, \`community\`).
+
+repo
+Filter by repository (example: \`game-eggs\`).
+
+category
+Filter by category path root.
+
+owner
+Filter by GitHub org/user.
+
+fields=name
+Return names-only array from filtered results.
+\`\`\``;
+
+const namesQueryCode = `\`\`\`bash
+# Names only (great for icon tooling)
+curl "https://eggs.download/api/eggs?source=pterodactyl&repo=game-eggs&fields=name"
 \`\`\``;
 
 const curlSlugCode = `\`\`\`bash
-curl https://eggs.download/api/eggs/minecraft-paper
-\`\`\``;
-
-const jsFetchCode = `\`\`\`javascript
-const response = await fetch('https://eggs.download/api/eggs/minecraft-paper');
-const data = await response.json();
-
-console.log(data.egg.name);        // "Paper"
-console.log(data.egg.startup);     // startup command
-console.log(data.meta.source);     // "pterodactyl" or "pelican"
-console.log(data.readme);          // README content (if available)
-\`\`\``;
-
-const indexResponseCode = `\`\`\`json
-[
-  {
-    "slug": "minecraft-paper",
-    "name": "Paper",
-    "source": "pterodactyl",
-    "category": "game-eggs",
-    "path": "minecraft/paper/egg-paper.json",
-    "rawUrl": "https://raw.githubusercontent.com/..."
-  }
-]
-\`\`\``;
-
-const detailResponseCode = `\`\`\`json
-{
-  "egg": {
-    "name": "Paper",
-    "author": "parker@pterodactyl.io",
-    "description": "High performance Minecraft server",
-    "startup": "java -Xms128M ...",
-    "docker_images": { ... },
-    "variables": [ ... ],
-    "scripts": { ... }
-  },
-  "meta": {
-    "slug": "minecraft-paper",
-    "name": "Paper",
-    "source": "pterodactyl",
-    "category": "game-eggs",
-    "repo": "parkervcp/eggs",
-    "owner": "parkervcp",
-    "branch": "master",
-    "path": "game_eggs/minecraft/java/paper/egg-paper.json",
-    "rawUrl": "https://raw.githubusercontent.com/..."
-  },
-  "readme": "# Paper\\n\\nHigh performance Minecraft server..."
-}
+# Full details for one egg
+curl "https://eggs.download/api/eggs/minecraft-paper"
 \`\`\``;
 </script>
