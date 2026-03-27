@@ -24,29 +24,29 @@
   },
   "dependencies": {
     "@nuxt/a11y": "1.0.0-alpha.1",
-    "@nuxt/hints": "1.0.0",
+    "@nuxt/hints": "1.0.2",
     "@nuxt/scripts": "1.0.0-beta.19",
-    "@nuxt/ui": "^4.5.1",
-    "@nuxtjs/mdc": "0.20.2",
+    "@nuxt/ui": "^4.6.0",
+    "@nuxtjs/mdc": "0.21.0",
     "@vueuse/core": "^14.2.1",
     "nuxt": "^4.4.2",
-    "tailwindcss": "^4.2.1",
+    "tailwindcss": "^4.2.2",
     "v-gsap-nuxt": "1.5.12"
   },
   "devDependencies": {
-    "@iconify-json/lucide": "^1.2.98",
+    "@iconify-json/lucide": "^1.2.99",
     "@iconify-json/noto": "^1.2.7",
-    "@iconify-json/simple-icons": "^1.2.74",
-    "@iconify-json/tabler": "^1.2.31",
+    "@iconify-json/simple-icons": "^1.2.75",
+    "@iconify-json/tabler": "^1.2.32",
     "@types/node": "latest",
     "nitro-cloudflare-dev": "^0.2.2",
     "nuxt-security": "^2.5.1",
-    "oxfmt": "^0.41.0",
-    "oxlint": "^1.56.0",
-    "oxlint-tsgolint": "^0.17.0",
-    "typescript": "^5.9.3",
-    "vue-tsc": "^3.2.5",
-    "wrangler": "^4.74.0"
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
+    "oxlint-tsgolint": "^0.18.0",
+    "typescript": "^6.0.2",
+    "vue-tsc": "^3.2.6",
+    "wrangler": "^4.78.0"
   },
   "packageManager": "pnpm@10.30.3"
 }
