@@ -75,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+import { useDebounceFn } from '@vueuse/core';
 import type { EggListItem } from '#shared/types/egg';
 
 useSeoMeta({
@@ -84,6 +85,7 @@ useSeoMeta({
 });
 
 const heroReady = ref(false);
+const { polite, assertive } = useAnnouncer();
 
 const suggestionSeeds = [
   'paper',
@@ -122,7 +124,6 @@ const cycleTyping = () => {
 };
 
 async function typeTo(target: string, targetRef: Ref<string>) {
-  const current = targetRef.value;
   let i = 0;
   while (i < target.length && targetRef.value !== target) {
     targetRef.value = target.slice(0, i + 1);
@@ -137,7 +138,7 @@ onMounted(() => {
   cycleTyping();
 });
 
-const { data, status, refresh } = await useApiFetch<EggListItem[]>('/api/eggs', {
+const { data, status, refresh } = await useApiFetch<EggListItem[]>('/eggs', {
   key: 'egg-index',
   transform: (eggs: EggListItem[]) =>
     eggs.map((e: EggListItem) => ({
@@ -165,6 +166,29 @@ const {
   maxResults: 50,
   suggestions: suggestionSeeds,
 });
+
+const filteredCount = computed(() => filtered.value.length);
+
+if (import.meta.client) {
+  const announceSearchResults = useDebounceFn((term: string, count: number) => {
+    polite(
+      count
+        ? `${count} result${count === 1 ? '' : 's'} for ${term}`
+        : `No results found for ${term}`,
+    );
+  }, 250);
+
+  watch([query, filteredCount, status], ([term, count, currentStatus]) => {
+    if (currentStatus !== 'success' || !term || term.length < 2) return;
+    announceSearchResults(term, count);
+  });
+
+  watch(status, (currentStatus, previousStatus) => {
+    if (currentStatus === 'error' && previousStatus !== 'error') {
+      assertive('Failed to load egg index. Please retry.');
+    }
+  });
+}
 </script>
 
 <style scoped>

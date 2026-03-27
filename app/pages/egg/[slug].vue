@@ -66,7 +66,7 @@
                     color="neutral"
                     variant="subtle"
                     icon="i-lucide-download"
-                    :to="`/api/eggs/${slug}`"
+                    :to="downloadHref"
                     external
                     target="_blank"
                     download
@@ -253,7 +253,7 @@ const variableColumns: TableColumn<EggVariable>[] = [
 ];
 
 const { data, status } = await useApiFetch<EggResponse>(
-  computed(() => `/api/eggs/${slug.value}`),
+  computed(() => `/eggs/${slug.value}`),
   {
     key: `egg:${slug.value}`,
   },
@@ -276,8 +276,14 @@ const githubHref = computed(() =>
     : null,
 );
 
+const runtimeConfig = useRuntimeConfig();
+const normalizedApiBase = computed(() => {
+  const base = runtimeConfig.public.apiBase || '/api';
+  return base.endsWith('/') ? base.slice(0, -1) : base;
+});
+const downloadHref = computed(() => `${normalizedApiBase.value}/eggs/${slug.value}`);
 const requestURL = useRequestURL();
-const apiUrl = computed(() => `${requestURL.origin}/api/eggs/${slug.value}`);
+const apiUrl = computed(() => `${requestURL.origin}${downloadHref.value}`);
 
 const seoTitle = computed(() => {
   const name = egg.value?.name || meta.value?.name || slug;

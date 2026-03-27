@@ -81,6 +81,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     githubToken: process.env.GITHUB_TOKEN || '',
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
+    },
   },
 
   routeRules: {
